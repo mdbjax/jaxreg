@@ -24,6 +24,7 @@ urlpatterns = [
     url(r"^version$", views.VersionView.as_view(), name="version"),
     url(r"^tools$", views.tools_view, name="tools"),
     url(r"^terms$", views.terms_view, name="terms"),
+    url(r"^feedback$", views.feedback_view, name="feedback"),
     url(
         r"^robots\.txt/$",
         TemplateView.as_view(

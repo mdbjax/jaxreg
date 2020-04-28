@@ -18,7 +18,7 @@ from django.contrib.postgres.fields import JSONField
 from taggit.managers import TaggableManager
 
 import uuid
-
+import os
 from .helpers import has_view_permission, has_edit_permission, get_collection_users
 
 
@@ -39,7 +39,6 @@ def delete_imagefile(sender, instance, **kwargs):
                 image__datafile=instance.image.datafile
             ).count()
             if count == 0:
-                print("Deleting %s, no longer used." % instance.image.datafile)
                 instance.image.datafile.delete()
 
 
@@ -80,13 +79,12 @@ class Container(models.Model):
     frozen = models.BooleanField(
         choices=FROZEN_CHOICES, default=False, verbose_name=verbose_frozen_name
     )
-
     # Limits on number of GETS - the counter (top) and then a custom value
     get_count = models.PositiveIntegerField(null=False, blank=False, default=0)
     get_limit = models.PositiveIntegerField(
         null=False, blank=False, default=CONTAINER_WEEKLY_GET_LIMIT
-    )
-
+   )    
+    size = models.PositiveIntegerField(null=False, blank=False, default=0)
     # A helper function to get an image.
     def get_image(self):
 

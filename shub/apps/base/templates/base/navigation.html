@@ -3,7 +3,7 @@
 
 <nav class="navbar fixed-top navbar-expand-sm navbar-light bg-light">
     <a class="navbar-brand" href="{% url 'index' %}">
-         <span style="font-size: 1.8rem; color:#e32929; text-decoration:none; text-transform:uppercase">S<span style="font-size:1.8rem;color:black;text-transform:uppercase">Registry</span>
+         <span style="font-size: 1.8rem; color:#009ED0; text-decoration:none; text-transform:uppercase">Jax<span style="font-size:1.8rem;color:#05396B;text-transform:uppercase">Reg</span><span style="font-size: 1.4rem; color:#FF5733; text-decoration:none; text-transform:uppercase">   (Alpha)    </span>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-collapse">☰</button> 
     <div class="collapse navbar-collapse" id="navbar-collapse">
@@ -12,10 +12,12 @@
             </li>
             <li class="nav-item"> <a class="nav-link" href="{% url 'teams' %}">Teams</a>
             </li>
-            <li class="nav-item"> <a class="nav-link" href="https://singularityhub.github.io/sregistry" target="_blank">User Guide</a>
+            <li class="nav-item"> <a class="nav-link" href="https://jacksonlaboratory.sharepoint.com/sites/ResearchIT/SitePages/JAX-Singularity-Container-Registry-User-Guide.aspx" target="_blank">User Guide</a>
             </li>
             <li class="nav-item"> <a class="nav-link" href="{% url 'tools' %}">Tools</a>
             </li>
+	    <li class="nav-item"> <a class="nav-link" href="{% url 'feedback' %}">Feedback</a>
+	    </li>
            {% if request.user.is_authenticated %}
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ request.user.username }}</a>

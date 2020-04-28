@@ -39,6 +39,11 @@ def terms_view(request):
     return render(request, "terms/usage_agreement.html")
 
 
+@ratelimit(key="ip", rate=rl_rate, block=rl_block)
+def feedback_view(request):
+    return render(request, "main/feedback.html")
+
+
 class VersionView(APIView):
     """{'data': {'version': 'v1.0.4-0-g24d3b74', 'apiVersion': '2.0.0-alpha.2'}}    
     """

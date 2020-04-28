@@ -16,7 +16,7 @@ import django_rq
 import shutil
 import os
 import uuid
-
+from shub.apps.library.views.helpers import generate_container_metadata
 
 def move_upload_to_storage(collection, upload_id):
     """moving an uploaded *UploadImage* to storage means:
@@ -88,7 +88,8 @@ def calculate_version(cid):
 
     print("Calculating version for upload.")
     container = get_container(cid)
-    version = "sha256.%s" % get_file_hash(container.image.datafile.path, "sha256")
+    version = "sha256.%s" % get_file_hash(
+        container.image.datafile.path, "sha256")
     container.version = version
     container.save()
 
@@ -138,13 +139,19 @@ def upload_container(cid, user, name, version, upload_id, size=None):
         if os.path.exists(upload_id):
 
             # If name is too long, will return OSError on move to storage
-            new_path = move_nginx_upload_to_storage(collection, upload_id, storage)
+            new_path = move_nginx_upload_to_storage(
+                collection, upload_id, storage)
             instance = ImageUpload.objects.create(
                 file=new_path, upload_id=str(uuid.uuid4())
             )
         else:
             instance = move_upload_to_storage(collection, upload_id)
-
+        
+        #Size
+        #bot.debug(os.path.getsize(instance.file.path))
+        size = os.path.getsize(instance.file.path) >> 20
+        #print("size set")
+        #container.metadata["size_mb"] = size
         # A collection name can have a slash (or not)
         container_uri = names["uri"]
         container_name = names["image"]
@@ -164,6 +171,7 @@ def upload_container(cid, user, name, version, upload_id, size=None):
             name=container_uri,
             owner_id=user.id,
             datafile=instance.file,
+            size=size
         )
 
         # Get a container, if it exists (and the user is re-using a name)
@@ -185,7 +193,14 @@ def upload_container(cid, user, name, version, upload_id, size=None):
             if container.frozen is False:
                 container.delete()
                 create_new = False
-
+        ## Save the size
+        #if size is None:
+        #    size = os.path.getsize(instance.file.path) >> 20
+        #container.metadata["size_mb"] = size
+        #bot.debug(create_new) 
+        #bot.debug(names["version"])
+        #bot.debug(containers)
+        
         # Container doesn't already exist / or old version isn't frozen
         if create_new is True:
             try:
@@ -195,6 +210,7 @@ def upload_container(cid, user, name, version, upload_id, size=None):
                     tag=names["tag"],
                     image=image,
                     version=names["version"],
+                    size=size
                 )
 
             # Catches when container is frozen, and version already exists
@@ -208,20 +224,23 @@ def upload_container(cid, user, name, version, upload_id, size=None):
         else:
             container.image = image
             container.version = names["version"]
-
+ 
+        container.save()
+        container.metadata = generate_container_metadata(container)
+        #bot.debug(container.metadata)
         container.save()
 
         # Save the size
-        if size is None:
-            size = os.path.getsize(instance.file.path) >> 20
-        container.metadata["size_mb"] = size
+        #if size is None:
+        #    size = os.path.getsize(instance.file.path) >> 20
+        #container.metadata["size_mb"] = size
+        #container.size = size
 
         # Once the container is saved, delete the intermediate file object
         delete_file_instance(instance)
 
         # Run a task to calculate the sha256 sum
         django_rq.enqueue(calculate_version, cid=container.id)
-
 
 def delete_file_instance(instance):
     """a helper function to remove the file assocation, and delete the instance

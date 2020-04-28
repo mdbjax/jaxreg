@@ -25,7 +25,6 @@ ENABLE_BITBUCKET_AUTH = False
 # See below for additional authentication module, e.g. LDAP that are
 # available, and configured, as plugins.
 
-
 # DOMAIN NAMES
 ## IMPORTANT: if/when you switch to https, you need to change "DOMAIN_NAME"
 # to have https, otherwise some functionality will not work (e.g., GitHub webhooks)
@@ -34,12 +33,12 @@ DOMAIN_NAME = "https://jaxreg.jax.org"
 DOMAIN_NAME_HTTP = "http://jaxreg.jax.org"
 DOMAIN_NAKED = DOMAIN_NAME_HTTP.replace("http://", "")
 
-ADMINS = (("bradlma", "Matt.Bradley@jax.org"),)
+ADMINS = (("bradlma", "matt.bradley@jax.org"),("mckend", "david.mckenzie@jax.org"), ("ssander", "shane.sanders@jax.org"), ("macklj", "jason.macklin@jax.org"),("mcdiva", "aaron.mcdivitt@jax.org"))
 MANAGERS = ADMINS
 
-HELP_CONTACT_EMAIL = "helpdesk@jax.org"
-HELP_INSTITUTION_SITE = '' 
-REGISTRY_NAME = "JaxReg - The Jackson Laboratory Singularity Registry"
+HELP_CONTACT_EMAIL = "rit-ci@jax.org"
+HELP_INSTITUTION_SITE = ''
+REGISTRY_NAME = "Jackson Laboratory Singularity Container Registry"
 REGISTRY_URI = "jaxreg"
 GOOGLE_ANALYTICS = None  # "UA-XXXXXXXXX"
 
@@ -47,13 +46,13 @@ GOOGLE_ANALYTICS = None  # "UA-XXXXXXXXX"
 
 # Set this to be some size in MB to limit uploads.
 # Uploads > 2.5GB will not use memory, but the filesystem
-DATA_UPLOAD_MAX_MEMORY_SIZE = 10000
+DATA_UPLOAD_MAX_MEMORY_SIZE = None
 
 # Allow users to create public collections
 USER_COLLECTIONS = True
 
 # Limit users to N collections (None is unlimited)
-USER_COLLECTION_LIMIT = 10
+USER_COLLECTION_LIMIT = 2
 
 # Should registries by default be private, with no option for public?
 PRIVATE_ONLY = False
@@ -65,8 +64,8 @@ DEFAULT_PRIVATE = False
 COLLECTIONS_VIEW_PAGE_COUNT = 250
 
 # The maximum number of downloads allowed per container/collection, per week
-CONTAINER_WEEKLY_GET_LIMIT = 500
-COLLECTION_WEEKLY_GET_LIMIT = 500
+CONTAINER_WEEKLY_GET_LIMIT = 1000
+COLLECTION_WEEKLY_GET_LIMIT = 1000
 
 # Disable all pushes of containers, recipes, etc. Also for Google Cloud Build
 DISABLE_BUILDING = False
@@ -124,7 +123,6 @@ VIEW_RATE_LIMIT_BLOCK = (
 # Add the name of a plugin under shub.plugins here to enable it
 
 # Available Plugins:
-
 # - ldap_auth: Allows sregistry to authenitcate against an LDAP directory
 # - google_build: a custom storage with that uses Google Cloud Build + Storage
 # - pam_auth: Allow users from (docker) host to log in
@@ -132,4 +130,11 @@ VIEW_RATE_LIMIT_BLOCK = (
 # - saml_auth: authentication with SAML
 # - pgp: deploy a key server alongside your registry
 
-PLUGINS_ENABLED = ['ldap_auth']
+PLUGINS_ENABLED = [
+    #    'pgp'
+        'ldap_auth'
+    #    'google_build'
+    #    'pam_auth',
+    #    'globus',
+    #    'saml_auth'
+]

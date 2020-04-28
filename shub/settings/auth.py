@@ -18,8 +18,7 @@ AUTHENTICATION_BACKENDS = (
     "social_core.backends.google.GoogleOAuth2",
     "social_core.backends.twitter.TwitterOAuth",
     "social_core.backends.facebook.FacebookOAuth2",
-    "shub.apps.users.views.auth.ShubGithubOAuth2",
-    # "social_core.backends.github.GithubOAuth2",
+    "social_core.backends.github.GithubOAuth2",
     "social_core.backends.gitlab.GitLabOAuth2",
     "social_core.backends.bitbucket.BitbucketOAuth2",
 )
@@ -40,7 +39,7 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = "http://127.0.0.1"
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = "https://jaxreg.jax.org/"
 
 # http://psa.matiasaguirre.net/docs/configuration/settings.html#urls-options
 # SOCIAL_AUTH_REDIRECT_IS_HTTPS = True

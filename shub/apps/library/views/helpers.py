@@ -105,7 +105,6 @@ def generate_user_data(user):
         "id": str(user.id),
         "name": user.username,
         "description": user.username,
-        "size": 0,
         "quota": 0,
         "defaultPrivate": False,
         "customData": "",

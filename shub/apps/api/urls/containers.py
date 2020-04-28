@@ -44,6 +44,8 @@ class SingleContainerSerializer(serializers.ModelSerializer):
         for key in ["build_metadata", "builder", "build_finish", "image"]:
             if key in metadata:
                 del metadata[key]
+        for key in metadata:
+            print(metadata[key])
         return metadata
 
     def get_download_url(self, container):
@@ -69,6 +71,7 @@ class SingleContainerSerializer(serializers.ModelSerializer):
             "frozen",
             "metadata",
             "collection",
+            "size",
         )
 
 
@@ -105,6 +108,7 @@ class ContainerSerializer(serializers.HyperlinkedModelSerializer):
             "frozen",
             "metadata",
             "collection",
+            "size",
         )
 
     id = serializers.ReadOnlyField()
@@ -179,7 +183,8 @@ class ContainerDetailByName(LoggingMixin, RatelimitMixin, generics.GenericAPIVie
 
         if container is None:
             full_name = "%s/%s" % (collection, name)
-            container = self.get_object(collection=full_name, name=full_name, tag=tag)
+            container = self.get_object(
+                collection=full_name, name=full_name, tag=tag)
         if container is None:
             raise NotFound(detail="Container Not Found")
 
@@ -200,7 +205,8 @@ class ContainerDetailByName(LoggingMixin, RatelimitMixin, generics.GenericAPIVie
         # if container None, likely is google build (container name includes collection)
         if container is None:
             full_name = "%s/%s" % (collection, name)
-            container = self.get_object(collection=full_name, name=full_name, tag=tag)
+            container = self.get_object(
+                collection=full_name, name=full_name, tag=tag)
 
         return _container_get(request, container, name, tag)
 
@@ -208,7 +214,7 @@ class ContainerDetailByName(LoggingMixin, RatelimitMixin, generics.GenericAPIVie
 def _container_get(request, container, name=None, tag=None):
     """container get is the shared function for getting a container based
        on a name or an id. It validates the request and returns a response.
-       
+
        Parameters
        ==========
        request: the request from the view with the user
@@ -252,7 +258,8 @@ def _container_get(request, container, name=None, tag=None):
         raise PermissionDenied(detail="Unauthorized")
 
     timestamp = generate_timestamp()
-    payload = "pull|%s|%s|%s|%s|" % (container.collection.name, timestamp, name, tag)
+    payload = "pull|%s|%s|%s|%s|" % (
+        container.collection.name, timestamp, name, tag)
 
     if validate_request(auth, payload, "pull", timestamp):
         serializer = SingleContainerSerializer(container)

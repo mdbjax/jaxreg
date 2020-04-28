@@ -36,6 +36,7 @@ class CollectionSerializer(serializers.HyperlinkedModelSerializer):
                 "tag": c.tag,
                 "uri": c.get_uri(),
                 "detail": "%s/containers/%s" % (settings.DOMAIN_NAME, c.id),
+		"size": c.metadata.get("size_mb")
             }
             container_list.append(entry)
         return container_list

@@ -107,6 +107,7 @@
                                <th>Status</th>
                                <th>Tag</th>
                                <th>Build Date</th>
+			       <th>Container Size (MiB)</th>
                                <!--<th></th>-->
                                <th></th>
                            </tr>
@@ -133,7 +134,7 @@
                                </td>
                                 
                                <td>{% if container.builder.deffile %}<a href="{{ container.builder.deffile }}" target="_blank">Singularity.{{ container.tag }}</a>{% else %}
-                               <a href="{% url 'download_recipe' container.id %}">Singularity.{{ container.tag }}</a>{% endif %}</td>
+                               <a href="{% url 'download_recipe' container.id %}" target="_blank">{{container.name}}-{{container.tag}}.def</a>{% endif %}</td>
                                <td>
                                    {% if container.image %}<!--Container was pushed directly-->
                                        {% if edit_permission %}<a href="{% url 'change_freeze_status' container.id %}">{% endif %}
@@ -156,6 +157,7 @@
 
                                <td>{{ container.tag }}</td>
                                <td>{{ container.add_date }}</td>
+		 	       <td>{{ container.size }}</td>
                                <td>
 
                                {% if container.image %}<!-- Globus only works for local images -->

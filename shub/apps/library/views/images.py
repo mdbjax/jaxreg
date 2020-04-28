@@ -72,23 +72,6 @@ class CompletePushImageFileView(RatelimitMixin, APIView):
             return Response(status=404)
 
 
-class RequestMultiPartPushImageFileView(RatelimitMixin, APIView):
-    """Currently this view returns 404 to default to v2 RequestPushImageFileView
-       see https://github.com/singularityhub/sregistry/issues/282
-    """
-
-    ratelimit_key = "ip"
-    ratelimit_rate = settings.VIEW_RATE_LIMIT
-    ratelimit_block = settings.VIEW_RATE_LIMIT_BLOCK
-    ratelimit_method = "POST"
-    renderer_classes = (JSONRenderer,)
-
-    def post(self, request, container_id, format=None):
-
-        print("POST RequestMultiPartPushImageFileView")
-        return Response(status=404)
-
-
 class RequestPushImageFileView(RatelimitMixin, APIView):
     """After creating the container, push the image file. Still check
        all credentials!
@@ -189,24 +172,20 @@ class PushImageFileView(RatelimitMixin, APIView):
             os.remove(final_container_path)
 
         # If there is a container file already existing, use it
-        if container.image != None:
-            imagefile = container.image
+        try:
+            imagefile = ImageFile.objects.get(
+                collection=container.collection.name, name=container_path
+            )
+        except ImageFile.DoesNotExist:
+            imagefile = ImageFile.objects.create(
+                collection=container.collection.name, name=container_path
+            )
 
-        else:
-            try:
-                imagefile = ImageFile.objects.get(
-                    collection=container.collection.name, name=final_container_path
-                )
-            except ImageFile.DoesNotExist:
-                imagefile = ImageFile.objects.create(
-                    collection=container.collection.name, name=final_container_path
-                )
-
-        # If the final image path is different from the imagefile path, this means
-        # it's potentially no longer used. Cache the name to prepare for delete
         imagefile.datafile.save(final_container_path, django_file, save=True)
         shutil.move(container_path, final_container_path)
         container.image = imagefile
+        container.size = os.path.getsize(final_container_path) >> 20
+        
         container.save()
         return Response(status=200)
 
@@ -256,8 +235,9 @@ class PushImageView(RatelimitMixin, APIView):
         arch = request.query_params.get("arch")
         if arch:
             container.metadata["arch"] = arch
-
-        data = generate_container_metadata(container)
+        container.metadata = generate_container_metadata(container)
+        container.save()
+        data = container.metadata
         return Response(data={"data": data}, status=200)
 
 
@@ -459,14 +439,18 @@ class GetCollectionTagsView(RatelimitMixin, APIView):
             if existing.frozen:
 
                 # We can't create this new container with the tag, delete it
+                container.image = None
+                container.save()
                 container.delete()
                 return Response(
                     {"message": "This tag exists, and is frozen."}, status=400
                 )
 
             # Case 2: Exists and not frozen (replace)
-            existing.delete()
-            selected = container
+            container.image = None
+            container.save()
+            container.delete()
+            selected = existing
 
         # Not existing, our container is selected for the tag
         else:

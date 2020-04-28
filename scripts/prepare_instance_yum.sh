@@ -10,8 +10,7 @@ INSTALL_ROOT=/opt
 
 # Prepare instance (or machine) with Docker, docker-compose, python
 
-sudo apt-get update > /dev/null
-sudo apt-get install -y git \
+sudo yum install -y git \
                         build-essential \
                         nginx \
                         python-dev
@@ -24,32 +23,21 @@ sudo pip install oauth2client
 
 
 # Install Docker dependencies
-sudo apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    gnupg-agent \
-    software-properties-common
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2
 
-# Add docker key server
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-# OK
+#Add a stable repo
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-# $ sudo apt-key fingerprint 0EBFCD88
-# pub   rsa4096 2017-02-22 [SCEA]
-#       9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88
-# uid           [ unknown] Docker Release (CE deb) <docker@docker.com>
-# sub   rsa4096 2017-02-22 [S]
+#Install Docker!
+sudo yum install docker-ce -y
 
-# Add stable repository
-sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
+#Start docker service
+sudo systemctl start docker
+sudo systemctl enable docker
 
-# Install Docker!
-sudo apt-get update &&
-sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+#make sure to add all users that will maintain / use the registry
+sudo usermod -aG docker $USER
+sudo usermod -aG docker bradlma
 
 # test, you will still need sudo
 sudo docker run hello-world
@@ -57,11 +45,10 @@ sudo docker run hello-world
 # Docker group should already exist
 # sudo groupadd docker
 
-#make sure to add all users that will maintain / use the registry
-sudo usermod -aG docker $USER
-
 # Docker-compose
-sudo apt -y install docker-compose
+sudo yum -y install docker-compose
+
+
 
 # Note that you will need to log in and out for changes to take effect
 

@@ -6,26 +6,34 @@
          style='padding-bottom:100px'>
       <div class="col-md-12 p-lg-5 mx-auto my-12" style="margin-bottom: 80px">
 <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-      <h1 class="display-4">{% if REGISTRY_NAME %}{{ REGISTRY_NAME }}{% else %}Make containers, run, done.{% endif %}</h1>
-      <p class="lead">Your Open Source Registry for <a href="http://singularity.lbl.gov/" target="_blank"> Singularity</a> containers.</p>
+      <h1 class="display-4">The Jackson Laboratory Singularity Registry</h1>
+      <p class="lead">The official, unified internal registry for all of JAX's <a href="https://sylabs.io" target="_blank"> Singularity</a> containers.</p>
 </div>
       </div>
     </div>
-
+    <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-left" style='padding-bottom:100px'>
+         <h2>What's New?</h2>
+         <ul>
+           <li><b>See the size of your containers!</b> All containers now display the size of the uploaded container on the collection page. Each collection also now shows total container size too! </li>
+           <li><b>View your recipes!</b> All containers have their respective recipes available for viewing or download on the collection pages.</li>
+           <li><b>More features to come!</b> This site is in constant development, so make sure to check back here for new features. Send any feedback to <u>matt.bradley@jax.org</u></li>
+         </ul>
+    </div>
 <div id="fh5co-portfolio">
 
 <!-- Package your analysis -->
 <div class="fh5co-portfolio-item ">
-    <div class="fh5co-portfolio-figure animate-box" style="background-image: url(static/img/robot_package.png); background-size: 300px 300px;"></div>
+    <div class="fh5co-portfolio-figure animate-box" style="background-image: url(static/img/gatk.png); background-size: 800px 350px;"></div>
     <div class="fh5co-portfolio-description">
         <h2>Package your Analysis</h2>
-        <p>Whether you are working from your own computer, or a cluster environment, you can capture your analysis components and save them to <a href="https://singularityware.github.io" target="_blank">reproducible containers</a></p>
-        <p><a href="{% url 'collections' %}" 
+        <p>Whether you are working from your own computer, or a cluster environment, you can capture your analysis components and save them to <a href="https://sylabs.io/singularity/" target="_blank">reproducible containers</a></p>
+	<body><small> Picture: <a href="https://gatkforums.broadinstitute.org/gatk/discussion/11415/run-the-germline-gatk-best-practices-pipeline-for-5-per-genome"> Source </a> </small></body>
+        <p><a href="{% url 'collections' %}"  
               class="btn btn-primary">View Collections</a></p>
     </div>
 </div>
 
-<!-- Visualize Containers -->
+<!-- Visualize Containers
 <div class="fh5co-portfolio-item fh5co-img-right">
     <div class="fh5co-portfolio-figure animate-box" style="background-image: url(static/img/robot_vision.png); background-size: 350px 350px;"></div>
     <div class="fh5co-portfolio-description">
@@ -36,8 +44,8 @@
               class="btn btn-primary">See the Registry</a></p>
     </div>
 </div>
-
-<!-- Contact -->
+-->
+<!-- Contact
 <div class="fh5co-portfolio-item ">
     <div class="fh5co-portfolio-figure animate-box" style="background-image: url(static/img/reproducible_robots.png); background-size: 370px 250px;"></div>
     <div class="fh5co-portfolio-description">
@@ -51,7 +59,7 @@
               class="btn btn-primary">Contact {{ REGISTRY_URI }}</a></p>
     </div>
 </div>
-
+-->
 <!-- Deploy an Analysis -->
 <div class="fh5co-portfolio-item fh5co-img-right">
     <div class="fh5co-portfolio-figure animate-box" style="background-image: url(static/img/hang10_robot.png); background-size: 300px 300px;"></div>

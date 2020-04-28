@@ -31,7 +31,11 @@ from rest_framework.response import Response
 import os
 
 from .containers import get_container
+from sif.main import SIFHeader
 
+#from spython.main.base import Client
+#import os
+#import json
 
 ################################################################################
 # CONTAINER DOWNLOAD
@@ -44,13 +48,38 @@ def download_recipe(request, cid):
     """
     container = get_container(cid)
 
-    if "deffile" in container.metadata:
-        recipe = container.metadata["deffile"]
-        filename = "Singularity.%s" % container.tag
+# Old way of doing it 
+#    if "deffile" in container.metadata:
+#        recipe = container.metadata["deffile"]
+#        filename = "Singularity.%s" % container.tag
+#
+#        response = HttpResponse(recipe, content_type="text/plain")
+#        response["Content-Disposition"] = 'attachment; filename="%s"' % filename
+#        return response
 
-        response = HttpResponse(recipe, content_type="text/plain")
-        response["Content-Disposition"] = 'attachment; filename="%s"' % filename
-        return response
+# Using spython
+#    client = Client()
+#    filepath = container.image.get_abspath()
+#    filename = "Singularity.%s" % container.tag
+#    print(filename)
+#    print(filepath)
+#    metadata = client.inspect(filepath)
+#    recipe = metadata["deffile"]
+    #print(recipe)
+    #response = HttpResponse(recipe, content_type="text/plain")
+    #response["Content-Disposition"] = 'attachment; filename="%s"' % filename
+    #return response
+
+# Using sif
+    filepath = container.image.get_abspath()
+    filename = container.name + "-" + container.tag + ".def"
+#    print(filename) 
+    header = SIFHeader(filepath)
+    recipe = header._load_deffile()['content']
+#   print(recipe)
+    response = HttpResponse(recipe, content_type="text/plain")
+    #response["Content-Disposition"] = 'attachment; filename="%s"' % filename
+    return response
 
     messages.info(request, "Container does not have recipe locally.")
     return redirect(container.get_absolute_url())

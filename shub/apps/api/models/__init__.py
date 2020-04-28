@@ -68,6 +68,7 @@ class ImageFile(models.Model):
     name = models.CharField(max_length=200, null=False)
     owner_id = models.CharField(max_length=200, null=True)
     datafile = models.FileField(upload_to=get_upload_folder, max_length=255)
+    size = models.PositiveIntegerField(default=0)
 
     def get_label(self):
         return "imagefile"
@@ -95,6 +96,7 @@ class ImageUpload(models.Model):
     offset = models.BigIntegerField(default=0)
     created_on = models.DateTimeField(auto_now_add=True)
     completed_on = models.DateTimeField(null=True, blank=True)
+    size = models.PositiveIntegerField(default=0)
 
     @property
     def md5(self):

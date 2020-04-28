@@ -31,6 +31,7 @@ from ratelimit.decorators import ratelimit
 from rest_framework.exceptions import PermissionDenied
 
 import os
+from shub.logger import bot
 
 # Terminal Upload
 
@@ -53,7 +54,7 @@ def upload_complete(request):
         auth = request.META.get("HTTP_AUTHORIZATION", None)
         tag = request.POST.get("tag")
         csrftoken = request.META.get("CSRF_COOKIE")
-
+        bot.debug(size)
         if auth is None and csrftoken is None:
             if os.path.exists(filename):
                 os.remove(path)

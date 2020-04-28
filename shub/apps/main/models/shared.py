@@ -110,7 +110,7 @@ class Collection(models.Model):
             queryset = self.containers.filter(name=container_name)
         else:
             queryset = self.containers.all()
-        return [x.metadata["size_mb"] for x in queryset if "size_mb" in x.metadata]
+        return [x.size for x in queryset]
 
     def members(self):
         """a compiled list of members (contributors and owners)

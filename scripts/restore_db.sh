@@ -7,6 +7,9 @@
 # > crontab -l
 # > crontab -e
 
+#backup_dir=$1
+#echo $backup_dir
+
 for db in "users" "api" "main" "logs" 
   do
     echo "Loading table $db"

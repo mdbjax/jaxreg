@@ -3,7 +3,7 @@ ENV PYTHONUNBUFFERED 1
 ENV DEBIAN_FRONTEND noninteractive
 ENV MESSAGELEVEL QUIET
 
-ARG ENABLE_LDAP=false
+ARG ENABLE_LDAP=true
 ARG ENABLE_PAM=false
 ARG ENABLE_PGP=false
 ARG ENABLE_GOOGLEBUILD=false
@@ -94,6 +94,12 @@ RUN rm /code/cronjob
 
 # Create hashed temporary upload locations
 RUN mkdir -p /var/www/images/_upload/{0..9} && chmod 777 -R /var/www/images/_upload
+
+#Change locking mechanism from flock() to lockf() to work on NFS mounts
+RUN sed -i 's/flock/lockf/g' /usr/local/lib/python3.5/site-packages/django/core/files/locks.py
+
+#Pip install sif package for recipe extraction
+RUN pip install sif
 
 CMD /code/run_uwsgi.sh
 

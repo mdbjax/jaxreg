@@ -6,7 +6,7 @@
 
 EMAIL=${1}
 DOMAIN=${2}
-INSTALL_ROOT=$HOME
+INSTALL_ROOT=/opt
 
 # Install certbot (if not already done)
 sudo add-apt-repository ppa:certbot/certbot

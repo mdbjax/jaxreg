@@ -74,6 +74,10 @@
 </div>
 {% endif %}
 
+	{% for container in containers %}
+	{{ container.name }}
+	{% endfor %}
+
 {% endblock %}
 
 {% block scripts %}
